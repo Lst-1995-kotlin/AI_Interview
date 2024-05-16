@@ -3,7 +3,7 @@ import test from "@/views/test.vue"
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: test
   }
 ]

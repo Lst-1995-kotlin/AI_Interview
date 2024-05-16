@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var geminiRouter =  require('./routes/gemini');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/gemini', geminiRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -38,8 +40,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
-
 // Gemini API 설정
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
@@ -52,11 +52,11 @@ async function run() {
     history: [
       {
         role: "user",
-        parts: [{ text: "Hello, I have 2 dogs in my house." }],
+        parts: [{ text: "role = user: hello" }],
       },
       {
         role: "model",
-        parts: [{ text: "Great to meet you. What would you like to know?" }],
+        parts: [{ text: "role = model: hello" }],
       },
     ],
     generationConfig: {
@@ -64,7 +64,7 @@ async function run() {
     },
   });
 
-  const msg = "How many paws are in my house?";
+  const msg = "안녕 반가워";
 
   const result = await chat.sendMessage(msg);
   const response = await result.response;
@@ -73,3 +73,5 @@ async function run() {
 }
 
 run();
+
+module.exports = app;
