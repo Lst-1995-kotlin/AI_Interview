@@ -41,37 +41,38 @@ app.use(function(err, req, res, next) {
 });
 
 // Gemini API 설정
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
+// const genAI = new GoogleGenerativeAI('AIzaSyBIpZ5MzBRZZmKRfIGiGGMB3vpZOHF8HdM');
+// const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
-const genAI = new GoogleGenerativeAI('AIzaSyBIpZ5MzBRZZmKRfIGiGGMB3vpZOHF8HdM');
+// async function run() {
+  
+//   const chat = model.startChat({
+//     history: [
+//       {
+//         role: "user",
+//         parts: [{ text: "role = user: hello" }],
+//       },
+//       {
+//         role: "model",
+//         parts: [{ text: "role = model: hello" }],
+//       },
+//     ],
+//     generationConfig: {
+//       maxOutputTokens: 100,
+//     },
+//   });
 
-async function run() {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+//   const msg = "안녕 반가워";
 
-  const chat = model.startChat({
-    history: [
-      {
-        role: "user",
-        parts: [{ text: "role = user: hello" }],
-      },
-      {
-        role: "model",
-        parts: [{ text: "role = model: hello" }],
-      },
-    ],
-    generationConfig: {
-      maxOutputTokens: 100,
-    },
-  });
+//   const result = await chat.sendMessage(msg);
+//   const response = await result.response;
+//   const text = response.text();
+//   console.log(text);
+// }
 
-  const msg = "안녕 반가워";
 
-  const result = await chat.sendMessage(msg);
-  const response = await result.response;
-  const text = response.text();
-  console.log(text);
-}
 
-run();
+// run();
 
 module.exports = app;
