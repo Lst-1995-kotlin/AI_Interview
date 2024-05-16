@@ -1,10 +1,26 @@
 <template>
-    <div>HelloWorld</div>
+    <div>
+        {{ result }}
+    </div>
 </template>
 <script>
+
+
     export default {
         data() {
-            return
+            result: ""
+        },
+        mounted() {
+            this.getLinkState()
+        },
+        methods: {
+            getLinkState() {
+                this.$axios.post("/gemini/basic")
+                .then((response) => {
+                    this.result = response.result;
+                    console.log(response.result)
+                })
+            }
         }
     }
 </script>
