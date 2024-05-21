@@ -40,39 +40,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// Gemini API 설정
-// const { GoogleGenerativeAI } = require("@google/generative-ai");
-// const genAI = new GoogleGenerativeAI('AIzaSyBIpZ5MzBRZZmKRfIGiGGMB3vpZOHF8HdM');
-// const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-
-// async function run() {
-  
-//   const chat = model.startChat({
-//     history: [
-//       {
-//         role: "user",
-//         parts: [{ text: "role = user: hello" }],
-//       },
-//       {
-//         role: "model",
-//         parts: [{ text: "role = model: hello" }],
-//       },
-//     ],
-//     generationConfig: {
-//       maxOutputTokens: 100,
-//     },
-//   });
-
-//   const msg = "안녕 반가워";
-
-//   const result = await chat.sendMessage(msg);
-//   const response = await result.response;
-//   const text = response.text();
-//   console.log(text);
-// }
-
-
-
-// run();
-
 module.exports = app;

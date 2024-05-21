@@ -4,7 +4,13 @@
     </div>
     <div>
         <v-btn @click = "request">질문하기</v-btn>
-        <VCardText v-text="q"> </VCardText>
+        <v-list lines="one">
+            <v-list-item
+                v-for="n in 1"
+                :title="q"
+                :lines="true"
+            ></v-list-item>
+        </v-list>
     </div>
 </template>
 <script>
