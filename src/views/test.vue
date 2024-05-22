@@ -3,15 +3,15 @@
         <VCardText v-text="result"> </VCardText>
     </div>
     <div class="text-center">
-        <v-btn @click = "request">질문하기</v-btn>
         <v-text-field v-model="content" ></v-text-field>
-        <v-list lines="one">
-            <v-list-item
-                v-for="n in 1"
-                :title="q"
-                :lines="true"
-            ></v-list-item>
-        </v-list>
+    </div>
+    <div class="text-center">
+        <v-btn @click = "request">질문하기</v-btn>
+    </div>
+    <div class="custom">
+        <v-card>
+            <v-card-text v-text="q"> </v-card-text>
+        </v-card>
     </div>
 </template>
 <script>
@@ -44,3 +44,10 @@ export default {
     }
 }
 </script>
+
+<style>
+.custom {
+    margin-top: 20px ;
+}
+
+</style>
