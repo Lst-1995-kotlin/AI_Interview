@@ -21,7 +21,9 @@ router.post('/basic', async function (req, res) {
 
 router.post('/quiz', async function (req, res) {
     try {
-        const result1 = await chat.sendMessageStream("숫자 1부터 1만 까지 랜덤 숫자 6개 말해줘");
+        const content = req.body.content;
+        console.log("컨텐츠 확인: " + content);
+        const result1 = await chat.sendMessageStream(content);
         let text = "";
 
         for await (const item of result1.stream) {
