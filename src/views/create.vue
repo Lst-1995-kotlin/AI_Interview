@@ -3,10 +3,16 @@
         <VCardText v-text="result"> </VCardText>
     </div>
     <div class="input-style">
-        <v-text-field v-model="content" label="채용공고 링크를 입력해주세요."></v-text-field>
+        <v-text-field v-model="information.company_name" label="기업명"></v-text-field>
+    </div>
+    <div class="input-style">
+        <v-text-field v-model="information.job_description" label="직무내용"></v-text-field>
+    </div>
+    <div class="input-style">
+        <v-text-field v-model="information.qualification_conditions" label="자격요건"></v-text-field>
     </div>
     <div class="text-center">
-        <v-btn @click = "request" color="primary">채용공고 분석하기</v-btn>
+        <v-btn @click = "request" color="primary">면접 보러가기</v-btn>
     </div>
     <div class="custom">
         <v-card>
@@ -20,6 +26,11 @@
             return {
                 result: "AI 서비스와 연결 중 입니다.",
                 content: "",
+                information: {
+                    company_name: "",
+                    job_description: "",
+                    qualification_conditions: ""
+                },
                 q: ""
             }
         },
@@ -30,11 +41,19 @@
             getLinkState() {
                 this.$axios.post("/gemini/createInterviewer")
                 .then((response) => {
-                    this.result = response.data.result;
+                    this.result = response.data.result + response.data.result2;
                 })
             },
             request() {
-                this.$axios.post("/gemini/quiz", {content: this.content})
+                if (this.information.company_name == "" && 
+                    this.information.job_description == "" &&
+                    this.information.qualification_conditions == ""
+                ) {
+                    alert("모든 내용을 기입해주세요.")
+                    return
+                }
+                console.log(this.information)
+                this.$axios.post("/gemini/quiz", this.information)
                 .then((response) => {
                     this.q = response.data.result;
                 })
