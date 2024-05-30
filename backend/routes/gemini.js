@@ -41,7 +41,7 @@ const safetySettings = [
 let chat = null
 
 router.post('/createInterviewer', async function (req, res) {
-    let message = genAI ? "연결 성공" : "연결 실패";
+    let message = genAI ? "success" : "fail";
     if (!chat) {
         chat = await model.startChat({
             generationConfig,
@@ -110,21 +110,21 @@ router.post('/createInterviewer', async function (req, res) {
             ],
           });
     }
-    let isChatSetting = chat ? "챗 설정 성공" : "챗 설정 실패";
+    let isChatSetting = chat ? "success" : "fail";
     res.json({
-        result: message,
-        result2: isChatSetting
+        model_result: message,
+        chat_result: isChatSetting
     })
 }) 
 
-router.post('/quiz', async function (req, res) {
+router.post('/inputdata', async function (req, res) {
    
     try {
         const content = req.body
         console.log("컨텐츠 확인: " + content);
-        const company_name = String(content.company_name)
-        const job_description = String(content.job_description)
-        const qualification_conditions = String(content.qualification_conditions)
+        const company_name = content.company_name
+        const job_description = content.job_description
+        const qualification_conditions = content.qualification_conditions
         const result1 = await chat.sendMessageStream("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + "이야 면접관 모드로" + 
             "면접을 진행해줘"
         );

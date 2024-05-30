@@ -14,10 +14,15 @@
     <div class="text-center">
         <v-btn @click = "request" color="primary">면접 보러가기</v-btn>
     </div>
-    <div class="custom">
-        <v-card>
-            <v-card-text v-text="q"> </v-card-text>
-        </v-card>
+    <div class="text-center">
+        <v-progress-circular
+        class="mt-4"
+        ref="loading_cicle"
+        v-if="loading_cicle_is_show"
+        :size="50"
+        color="primary"
+        indeterminate
+        ></v-progress-circular>
     </div>
 </template>
 <script>
@@ -26,6 +31,7 @@
             return {
                 result: "AI 서비스와 연결 중 입니다.",
                 content: "",
+                loading_cicle_is_show: false,
                 information: {
                     company_name: "",
                     job_description: "",
@@ -41,7 +47,11 @@
             getLinkState() {
                 this.$axios.post("/gemini/createInterviewer")
                 .then((response) => {
-                    this.result = response.data.result + response.data.result2;
+                    if (!response.data.model_result == "fail" && !response.data.chat_result == "fail") {
+                        this.result = "현재 오류가 있어 잠시 후에 다시 시도해주세요."
+                        return
+                    }
+                    this.result = ""
                 })
             },
             request() {
@@ -53,9 +63,11 @@
                     return
                 }
                 console.log(this.information)
-                this.$axios.post("/gemini/quiz", this.information)
+                this.loading_cicle_is_show = true
+                this.$axios.post("/gemini/inputdata", this.information)
                 .then((response) => {
-                    this.q = response.data.result;
+                    this.loading_cicle_is_show = false
+                    this.$router.push("/interview")
                 })
             }
         }
@@ -66,7 +78,7 @@
 .input-style {
     height: auto;
     width: 15cm;
-    margin: 0 auto;
+    margin: 4px auto;
 }
 .custom {
     margin: 10px auto;
