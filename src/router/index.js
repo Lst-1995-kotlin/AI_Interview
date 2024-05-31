@@ -7,7 +7,7 @@ const routes = [
     path: "/",
     component: home
   }, {
-    path: "/interview",
+    path: "/interview/:information",
     component: interview
   }
 ]

@@ -14,16 +14,7 @@
     <div class="text-center">
         <v-btn @click = "request" color="primary">면접 보러가기</v-btn>
     </div>
-    <div class="text-center">
-        <v-progress-circular
-        class="mt-4"
-        ref="loading_cicle"
-        v-if="loading_cicle_is_show"
-        :size="50"
-        color="primary"
-        indeterminate
-        ></v-progress-circular>
-    </div>
+    
 </template>
 <script>
     export default {
@@ -31,7 +22,6 @@
             return {
                 result: "AI 서비스와 연결 중 입니다.",
                 content: "",
-                loading_cicle_is_show: false,
                 information: {
                     company_name: "",
                     job_description: "",
@@ -62,13 +52,7 @@
                     alert("모든 내용을 기입해주세요.")
                     return
                 }
-                console.log(this.information)
-                this.loading_cicle_is_show = true
-                this.$axios.post("/gemini/inputdata", this.information)
-                .then((response) => {
-                    this.loading_cicle_is_show = false
-                    this.$router.push("/interview")
-                })
+                this.$router.push("/interview/" + this.information)
             }
         }
     }
