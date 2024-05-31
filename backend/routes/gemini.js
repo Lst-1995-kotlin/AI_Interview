@@ -41,7 +41,11 @@ const safetySettings = [
 let chat = null
 
 router.post('/createInterviewer', async function (req, res) {
-    let message = genAI ? "success" : "fail";
+    const content = req.body
+    console.log("컨텐츠 확인: " + content);
+    const company_name = content.company_name
+    const job_description = content.job_description
+    const qualification_conditions = content.qualification_conditions
     if (!chat) {
         chat = await model.startChat({
             generationConfig,
@@ -107,38 +111,15 @@ router.post('/createInterviewer', async function (req, res) {
                   {text: "알겠습니다. 이제부터 면접관 모드로 전환합니다. 최대한 실제 면접관처럼 말씀드리겠습니다. \n\n자, 이제 어떤 분야의 어떤 포지션 면접인지 말씀해 주시겠어요? 그리고 중점적으로 평가하고 싶은 부분이 있다면 무엇인지도 알려주세요. 😊 \n"},
                 ],
               },
+              {
+                role: "user",
+                parts: [
+                  {text: "기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + "이야 면접관 모드로 면접을 진행해줘"},
+                ],
+              },
             ],
           });
     }
-    try {
-      const content = req.body
-      console.log("컨텐츠 확인: " + content);
-      const company_name = content.company_name
-      const job_description = content.job_description
-      const qualification_conditions = content.qualification_conditions
-      const result1 = await chat.sendMessageStream("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + "이야 면접관 모드로" + 
-          "면접을 진행해줘"
-      );
-      // let text = "";
-      // for await (const item of result1.stream) {
-      //     if (item.candidates && item.candidates[0] && item.candidates[0].content && item.candidates[0].content.parts) {
-      //         text += item.candidates[0].content.parts[0].text;
-      //     } else {
-      //         console.error("Unexpected item structure:", item);
-      //         // 필요한 경우 에러 처리를 위해 다음 줄을 추가할 수 있습니다.
-      //         // throw new Error("Invalid response structure");
-      //     }
-      // }
-      res.json({
-          result: "success"
-      });
-  } catch (error) {
-      console.error("Error occurred:", error);
-      res.status(500).json({
-          error: "Internal Server Error",
-          message: error.message
-      });
-  }
 }) 
 
 router.post('/inputdata', async function (req, res) {
