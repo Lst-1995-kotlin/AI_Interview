@@ -110,11 +110,35 @@ router.post('/createInterviewer', async function (req, res) {
             ],
           });
     }
-    let isChatSetting = chat ? "success" : "fail";
-    res.json({
-        model_result: message,
-        chat_result: isChatSetting
-    })
+    try {
+      const content = req.body
+      console.log("컨텐츠 확인: " + content);
+      const company_name = content.company_name
+      const job_description = content.job_description
+      const qualification_conditions = content.qualification_conditions
+      const result1 = await chat.sendMessageStream("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + "이야 면접관 모드로" + 
+          "면접을 진행해줘"
+      );
+      // let text = "";
+      // for await (const item of result1.stream) {
+      //     if (item.candidates && item.candidates[0] && item.candidates[0].content && item.candidates[0].content.parts) {
+      //         text += item.candidates[0].content.parts[0].text;
+      //     } else {
+      //         console.error("Unexpected item structure:", item);
+      //         // 필요한 경우 에러 처리를 위해 다음 줄을 추가할 수 있습니다.
+      //         // throw new Error("Invalid response structure");
+      //     }
+      // }
+      res.json({
+          result: "success"
+      });
+  } catch (error) {
+      console.error("Error occurred:", error);
+      res.status(500).json({
+          error: "Internal Server Error",
+          message: error.message
+      });
+  }
 }) 
 
 router.post('/inputdata', async function (req, res) {
