@@ -1,4 +1,15 @@
 <template>
+    <div>
+    <v-card
+        v-for="(item, index) in history"
+        :key="index"
+        class="ma-5"
+    >
+        <v-card-title>{{ item.role }}</v-card-title>
+        <v-card-text>{{ item.text }}</v-card-text>
+    </v-card>
+    </div>
+
     <div class="text-center">
         <v-progress-circular
         class="mt-4"
@@ -10,39 +21,49 @@
         ></v-progress-circular>
     </div>
     <div class="text-center">
-        <VCardText v-model="information.company_name"></VCardText>
-        <VCardText v-model="information.job_description"></VCardText>
-        <VCardText v-model="information.qualification_conditions"></VCardText>
+        <v-btn @click = "inputData">질문 보내기</v-btn>
     </div>
 </template>
 <script>
-
     export default {
         data() {
             return {
-                loading_cicle_is_show: false,
-                information: {
-                    company_name: "",
-                    job_description: "",
-                    qualification_conditions: ""
-                },
+                loading_cicle_is_show: true,
+                count: 0,
+                query: "안녕하세요. 이번 안드로이드 개발 공고에 지원하게 된 이성태입니다.",
+                history:[]
             }
         },
         mounted() {
-            this.$axios.get("/interview/"+this.$route.params.information)
-            .then(response => {
-                this.information = response.data;
+            this.$axios.post("/gemini/getInitData")
+            .then((response) =>{
+                console.log(response.data.result)
+                this.count = response.data.result
+                this.history.push({
+                    role: "model",
+                    text: response.data.result
+                })
             })
-            console.log("객체 확인" + this.$route.params.information)
+            
         },
         methods: {
-            setCompanyData() {
-                this.$axios.post("/gemini/inputdata", this.information)
+            inputData() {
+                console.log("보낸 내용"+this.query)
+                this.count += this.query
+                this.history.push({
+                    role: "user",
+                    text: this.query
+                })
+                this.$axios.post("/gemini/inputdata", {query: this.query})
                 .then((response) => {
-                    this.loading_cicle_is_show = false
-                    this.$router.push("/interview", this.information)
+                    this.count += "\n\n" + response.data.result
+                    this.history.push({
+                        role: "model",
+                        text: response.data.result
+                    })
                 })
             }
+            
         }
     }
 </script>
