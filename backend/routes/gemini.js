@@ -111,13 +111,13 @@ router.post('/createInterviewer', async function (req, res) {
     company_name = content.company_name
     job_description = content.job_description
     qualification_conditions = content.qualification_conditions
-    if (!chat) {
-        chat = model.startChat({
-            generationConfig,
-            safetySettings,
-            history: localHistory,
-          });
-    }
+    
+    chat = model.startChat({
+        generationConfig,
+        safetySettings,
+        history: localHistory,
+      });
+    
 }) 
 
 router.post('/getInitData',async function (req, res) {

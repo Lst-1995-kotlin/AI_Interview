@@ -1,13 +1,12 @@
 <template>
-    <div>
-    <v-card
-        v-for="(item, index) in history"
-        :key="index"
-        class="ma-5"
-    >
-        <v-card-title>{{ item.role }}</v-card-title>
-        <v-card-text>{{ item.text }}</v-card-text>
-    </v-card>
+    <div class = 'text-center'>
+        <v-card
+            v-for="(item, index) in history"
+            :key="index"
+        >
+            <v-card-title :class="item.role == 'user' ? 'userstyle' : 'aistyle'">{{ item.role }}</v-card-title>
+            <v-card-text :class="item.role == 'user' ? 'userstyle' : 'aistyle'">{{ item.text }}</v-card-text>
+        </v-card>
     </div>
 
     <div class="text-center">
@@ -67,3 +66,20 @@
         }
     }
 </script>
+
+<style>
+.userstyle {
+    align-self: right;
+    text-align: right;
+    background-color: rgb(235, 172, 77);
+    margin-top: 10% auto;
+}
+.aistyle {
+    align-self: left;
+    text-align: left;
+    background-color: rgb(151, 220, 98);
+    margin-top: 10% auto;
+}
+
+
+</style>
