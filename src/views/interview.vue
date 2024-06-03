@@ -3,9 +3,10 @@
         <v-card
             v-for="(item, index) in history"
             :key="index"
+            :class="item.role == 'user' ? 'userstyle' : 'aistyle'"
         >
-            <v-card-title :class="item.role == 'user' ? 'userstyle' : 'aistyle'">{{ item.role }}</v-card-title>
-            <v-card-text :class="item.role == 'user' ? 'userstyle' : 'aistyle'">{{ item.text }}</v-card-text>
+            <v-card-title :class="item.role == 'user' ? 'text-right' : 'text-left'">{{ item.role }}</v-card-title>
+            <v-card-text :class="item.role == 'user' ? 'text-right' : 'text-left'">{{ item.text }}</v-card-text>
         </v-card>
     </div>
 
@@ -72,13 +73,17 @@
     align-self: right;
     text-align: right;
     background-color: rgb(235, 172, 77);
-    margin-top: 10% auto;
+    margin-top: 2%;
+    margin-left: 40%;
+    margin-right: 4%;
 }
 .aistyle {
+    margin-right: 40%;
     align-self: left;
     text-align: left;
     background-color: rgb(151, 220, 98);
-    margin-top: 10% auto;
+    margin-top: 2%;
+    margin-left: 4%;
 }
 
 
