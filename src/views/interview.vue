@@ -1,17 +1,17 @@
-<template style="background-color: #f5f5f5;"> 
-    <div class="d-flex flex-column h-100">
-        <div class="flex-grow-1 overflow-auto templetestyle">
+<template> 
+    <div class="d-flex flex-column h-100 templetestyle">
+        <div class="flex-grow-1 overflow-auto" ref="items">
             <v-card v-for="(item, index) in history" 
             :key="index" 
             :class="item.role == 'user' ? 'userstyle' : 'aistyle'" 
-            ref="card"> 
+            > 
                 <v-card-title :class="item.role == 'user' ? 'usercontent' : 'aicontent'">{{ item.role }}</v-card-title>
                 <v-card-text :class="item.role == 'user' ? 'usercontent' : 'aicontent'">{{ item.text }}</v-card-text> 
             </v-card>
-            <div class="text-center">
+            <div class="text-center lodingstyle" 
+                ref="loading_cicle">
                 <v-progress-circular
                 class="mt-4"
-                ref="loading_cicle"
                 v-if="loading_cicle_is_show"
                 :size="50"
                 color="primary"
@@ -19,18 +19,23 @@
                 ></v-progress-circular>
             </div>
         </div>
-        <div class="fixed-bottom-center inputcontent">
+        <div 
+            class="fixed-bottom-center"
+            ref="text_input"
+        >
             <v-text-field
+                class="inputcontent"
+                variant="solo-filled"
                 label="질문을 입력하세요"
+                :append-inner-icon="'mdi-send'"
                 aligen="center"
-                ref="text_input"
                 v-model="query"
-                append-outer-icon="mdi-microphone"
-                append-icon="mdi-send"
-                @click:append="inputData"
+                @click:append-inner="inputData"
             ></v-text-field>
         </div>
+        <div class = mt-6 ref = "pagebottom"></div>
     </div>    
+    
 </template>
   
 <script>
@@ -56,19 +61,12 @@
         },
         methods: {
             focusLastCard() {
-                const cards = this.$refs.card;
-                if (cards && cards.length) {
-                    const lastCard = cards[cards.length - 1];
-                    if (lastCard) {
-                        lastCard.scrollIntoView({ behavior: 'smooth', block: 'end' });
-                    }
-                } else {
-                    return
-                }
-                const text_input = this.$refs.text_input
-                text_input.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                this.$nextTick(() => {
+                    this.$refs.pagebottom.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                });
             },
             inputData() {
+                this.focusLastCard()
                 if (this.query == "") return
                 this.loading_cicle_is_show = true
                 console.log("보낸 내용"+this.query)
@@ -83,8 +81,9 @@
                         role: "model",
                         text: response.data.result
                     })
-                    this.focusLastCard()
+                    this.query = ""
                     this.loading_cicle_is_show = false
+                    this.focusLastCard()
                 })
             }
             
@@ -94,9 +93,11 @@
 
 <style>
 .templetestyle{
-    max-height: 80%;
-    height: auto 80%;
-    width: 100%;
+    background-color: rgb(232, 218, 198);
+    height: 100%;
+}
+.lodingstyle{
+    height: 4%;
 }
 .userstyle {
     align-self: right;
@@ -125,10 +126,11 @@
     background-color: rgb(55, 136, 228);
 }
 .inputcontent {
-    max-height: 20%;
-    height: auto 20%;
     margin-left: 15%;
     margin-right: 15%;
-    margin-top: 4%;
+    margin-top: 2%;
+    background-color: rgb(232, 218, 198);
+    width: 100% auto;
+    height: 100% auto;
 }
 </style>
