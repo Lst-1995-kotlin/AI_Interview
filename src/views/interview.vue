@@ -33,7 +33,20 @@
                 @click:append-inner="inputData"
             ></v-text-field>
         </div>
-        <div class = mt-6 ref = "pagebottom"></div>
+        <div class = "mt-6 text-center" 
+        ref = "pagebottom">
+            <v-btn
+             color="primary"
+             class="btnstyle"
+             v-if="endcheck"
+            >저장하기</v-btn>
+             <v-btn
+             color="primary"
+             class="btnstyle"
+             v-if="endcheck"
+             @click="$router.push('/')"
+             >나가기</v-btn>
+        </div>
     </div>    
     
 </template>
@@ -43,6 +56,7 @@
         data() {
             return {
                 loading_cicle_is_show: true,
+                endcheck: false,
                 query: "",
                 history:[]
             }
@@ -68,6 +82,8 @@
             inputData() {
                 this.focusLastCard()
                 if (this.query == "") return
+                if (this.loading_cicle_is_show) return
+                if (this.endcheck) return
                 this.loading_cicle_is_show = true
                 console.log("보낸 내용"+this.query)
                 this.history.push({
@@ -77,9 +93,14 @@
                 this.focusLastCard()
                 this.$axios.post("/gemini/inputdata", {query: this.query})
                 .then((response) => {
+                    let result = response.data.result
+                    if (result.includes('endInterview')) {
+                        result = result.split('endInterview')[0]
+                        this.endcheck = true
+                    }
                     this.history.push({
                         role: "model",
-                        text: response.data.result
+                        text: result
                     })
                     this.query = ""
                     this.loading_cicle_is_show = false
@@ -92,6 +113,10 @@
 </script>
 
 <style>
+.btnstyle{
+    margin: 2%;
+    align-self: center;
+}
 .templetestyle{
     background-color: rgb(232, 218, 198);
     height: 100%;
