@@ -1,4 +1,5 @@
 <template>
+    <div class="top-margin"></div>
     <div class="input-style">
         <v-text-field v-model="information.company_name" label="기업명"></v-text-field>
     </div>
@@ -7,6 +8,9 @@
     </div>
     <div class="input-style">
         <v-text-field v-model="information.qualification_conditions" label="자격요건"></v-text-field>
+    </div>
+    <div class="input-style">
+        <v-textarea v-model="information.preferred_qualifications" label="우대사항"></v-textarea>
     </div>
     <div class="text-center">
         <v-btn @click = "request" color="primary">면접 보러가기</v-btn>
@@ -32,7 +36,8 @@
                 information: {
                     company_name: "",
                     job_description: "",
-                    qualification_conditions: ""
+                    qualification_conditions: "",
+                    preferred_qualifications: ""
                 }
             }
         },
@@ -40,7 +45,8 @@
             request() {
                 if (this.information.company_name == "" && 
                     this.information.job_description == "" &&
-                    this.information.qualification_conditions == ""
+                    this.information.qualification_conditions == "" &&
+                    this.information.preferred_qualifications == ""
                 ) {
                     alert("모든 내용을 기입해주세요.")
                     return
@@ -62,8 +68,11 @@
 </script>
 
 <style>
+.top-margin {
+    margin-top: 2%;
+}
 .input-style {
-    height: auto;
+    height: min-content;
     width: 15cm;
     margin: 4px auto;
 }

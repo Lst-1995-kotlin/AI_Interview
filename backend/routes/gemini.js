@@ -42,6 +42,7 @@ let chat = null
 let company_name = null
 let job_description = null
 let qualification_conditions = null
+let preferred_qualifications = null
 let localHistory = [
   {
     role: "user",
@@ -111,6 +112,7 @@ router.post('/createInterviewer', async function (req, res) {
     company_name = content.company_name
     job_description = content.job_description
     qualification_conditions = content.qualification_conditions
+    preferred_qualifications = content.preferred_qualifications
     
     chat = model.startChat({
         generationConfig,
@@ -123,11 +125,11 @@ router.post('/createInterviewer', async function (req, res) {
 router.post('/getInitData',async function (req, res) {
   
   try {
-    const responseStream = await chat.sendMessageStream("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + "이야 면접관 모드로" + 
-          "면접을 진행해줘"
+    const responseStream = await chat.sendMessageStream("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + 
+      "우대사항은" + preferred_qualifications + "이야 해당 채용공고를 보고 지원한 사람을 면접 보게 되었고 이제부터 면접관 모드로 면접을 진행해줘"
     );
-    console.log("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + "이야 면접관 모드로" + 
-    "면접을 진행해줘")
+    console.log("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + 
+      "우대사항은" + preferred_qualifications + "이야 해당 채용공고를 보고 지원한 사람을 면접 보게 되었고 이제부터 면접관 모드로 면접을 진행해줘")
     let text = ""
     for await (const item of responseStream.stream) {
       console.log("진행중")
