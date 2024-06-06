@@ -114,13 +114,22 @@ router.post('/createInterviewer', async function (req, res) {
     qualification_conditions = content.qualification_conditions
     preferred_qualifications = content.preferred_qualifications
     
-    chat = model.startChat({
+    try{
+      chat = await model.startChat({
         generationConfig,
         safetySettings,
         history: localHistory,
       });
-    
-}) 
+      res.json({
+        "result": "success"
+      })
+    }catch(err){
+      res.json({
+        "result": "fail"
+      })
+    }
+  }
+) 
 
 router.post('/getInitData',async function (req, res) {
   

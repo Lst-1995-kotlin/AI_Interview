@@ -1,32 +1,27 @@
 <template>
-    <div class="top-margin"></div>
-    <div class="input-style">
-        <v-text-field v-model="information.company_name" label="기업명"></v-text-field>
+    <div class="d-flex flex-column h-100 background">
+        <div class="top-margin"></div>
+        <v-container fluid>
+            <v-textarea class="input-style" auto-grow row-height="15" rows="1" variant="solo" v-model="information.company_name" label="기업명"></v-textarea>
+            <v-textarea class="input-style" auto-grow row-height="15" rows="1" variant="solo" v-model="information.job_description" label="직무내용"></v-textarea>
+            <v-textarea class="input-style" auto-grow row-height="15" rows="1" variant="solo" v-model="information.qualification_conditions" label="자격요건"></v-textarea>
+            <v-textarea class="input-style" auto-grow row-height="15" rows="1" variant="solo" v-model="information.preferred_qualifications" label="우대사항"></v-textarea>
+            <div class="text-center">
+                <v-btn @click = "request" color="primary" class="btn">면접 보러가기</v-btn>
+                <v-btn @click = "exit" color="primary" class="btn">나가기</v-btn>
+            </div>
+        </v-container>
+        <div class="text-center">
+            <v-progress-circular
+            class="mt-4"
+            ref="loading_cicle"
+            v-if="loading_cicle_is_show"
+            :size="50"
+            color="primary"
+            indeterminate
+            ></v-progress-circular>
+        </div>
     </div>
-    <div class="input-style">
-        <v-text-field v-model="information.job_description" label="직무내용"></v-text-field>
-    </div>
-    <div class="input-style">
-        <v-text-field v-model="information.qualification_conditions" label="자격요건"></v-text-field>
-    </div>
-    <div class="input-style">
-        <v-textarea v-model="information.preferred_qualifications" label="우대사항"></v-textarea>
-    </div>
-    <div class="text-center">
-        <v-btn @click = "request" color="primary">면접 보러가기</v-btn>
-    </div>
-
-    <div class="text-center">
-        <v-progress-circular
-        class="mt-4"
-        ref="loading_cicle"
-        v-if="loading_cicle_is_show"
-        :size="50"
-        color="primary"
-        indeterminate
-        ></v-progress-circular>
-    </div>
-    
 </template>
 <script>
     export default {
@@ -42,6 +37,9 @@
             }
         },
         methods: {
+            exit() {
+                this.$router.push("/")
+            },
             request() {
                 if (this.information.company_name == "" && 
                     this.information.job_description == "" &&
@@ -72,14 +70,20 @@
     margin-top: 2%;
 }
 .input-style {
-    height: min-content;
     width: 15cm;
     margin: 4px auto;
+
 }
 .custom {
     margin: 10px auto;
     height: auto;
     width: 15cm;
 }
-
+.btn{
+    margin: 1%;
+}
+.background {
+    background-color: rgb(232, 218, 198);
+    height: 100%;
+}
 </style>

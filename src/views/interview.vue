@@ -18,6 +18,20 @@
                 indeterminate
                 ></v-progress-circular>
             </div>
+            <div class = "mt-6 text-center" 
+                ref = "pagebottom">
+                <v-btn
+                color="primary"
+                class="btnstyle"
+                v-if="endcheck"
+                >저장하기</v-btn>
+                <v-btn
+                color="primary"
+                class="btnstyle"
+                v-if="endcheck"
+                @click="$router.push('/')"
+                >나가기</v-btn>
+            </div>
         </div>
         <div 
             class="fixed-bottom-center"
@@ -30,22 +44,9 @@
                 :append-inner-icon="'mdi-send'"
                 aligen="center"
                 v-model="query"
+                v-if="!endcheck"
                 @click:append-inner="inputData"
             ></v-text-field>
-        </div>
-        <div class = "mt-6 text-center" 
-        ref = "pagebottom">
-            <v-btn
-             color="primary"
-             class="btnstyle"
-             v-if="endcheck"
-            >저장하기</v-btn>
-             <v-btn
-             color="primary"
-             class="btnstyle"
-             v-if="endcheck"
-             @click="$router.push('/')"
-             >나가기</v-btn>
         </div>
     </div>    
     
