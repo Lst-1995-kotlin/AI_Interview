@@ -24,6 +24,7 @@
                 color="primary"
                 class="btnstyle"
                 v-if="endcheck"
+                @click="save"
                 >저장하기</v-btn>
                 <v-btn
                 color="primary"
@@ -46,13 +47,21 @@
                 v-model="query"
                 v-if="!endcheck"
                 @click:append-inner="inputData"
-            ></v-text-field>
+            >
+            </v-text-field>
+        </div>
+        <div>
+            <v-btn
+                v-if="!endcheck"
+            >중지하기</v-btn>
         </div>
     </div>    
     
 </template>
   
 <script>
+import moment from "moment"
+    
     export default {
         data() {
             return {
@@ -75,10 +84,19 @@
             
         },
         methods: {
+            save() {
+                this.$axios.post("/history/writetitle",{title: "임시타이틀"})
+                .then((response) => {
+                    this.query = response.data.no + "의 no 생성"
+                })
+            },
             focusLastCard() {
                 this.$nextTick(() => {
                     this.$refs.pagebottom.scrollIntoView({ behavior: 'smooth', block: 'end' });
                 });
+            },
+            stop() {
+                this.endcheck = true
             },
             inputData() {
                 this.focusLastCard()
