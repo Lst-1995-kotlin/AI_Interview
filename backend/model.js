@@ -8,6 +8,10 @@ function model(Sequelize, connection) {
         title: {
             type:Sequelize.TEXT,
         },
+        score: {
+            type:Sequelize.INTEGER,
+            defaultValue: 0
+        },
         writeDate: {
             type: Sequelize.DATE,
             defaultValue: Sequelize.NOW

@@ -3,7 +3,7 @@ const {
     HarmCategory,
     HarmBlockThreshold,
   } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI('AIzaSyBIpZ5MzBRZZmKRfIGiGGMB3vpZOHF8HdM');
+const genAI = new GoogleGenerativeAI('AIzaSyARr2Wj_lZuw1LnxSRdgiF7Uakfzx0032M');
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro",
   });
@@ -95,7 +95,7 @@ let localHistory = [
   {
     role: "user",
     parts: [
-      {text: "말투는 40대 남성 혹은 40대 여성의 면접관 말투만을 사용하고, 면접을 끝내고 싶거나 끝낼 경우에는 \"endInterview,{n}\" 라고 말해 n대신 인터뷰에 대한 점수를 100점을 만점으로 하여 점수를 알려줘 \n예를 들어 면접을 끝내고 싶거나 끝 낼 경우에는 너의 마지막 피드백 뒤에 가장 마지막에 endInterview,{78} 이라고 말해야만해"},
+      {text: "말투는 40대 남성 혹은 40대 여성의 면접관 말투만을 사용하고, 면접을 끝내고 싶거나 끝낼 경우에는 \"endInterviewX\" 라고 말해 X대신 인터뷰에 대한 점수를 100점을 만점으로 하여 점수를 알려줘 \n예를 들어 면접을 끝내고 싶거나 끝 낼 경우에는 너의 마지막 피드백 뒤에 가장 마지막에 endInterview78 같은 형태로만 말해야만해"},
     ],
   },
   {
@@ -146,7 +146,6 @@ router.post('/getInitData',async function (req, res) {
           text += item.candidates[0].content.parts[0].text;
       } else {
           console.error("Unexpected item structure:", item);
-          // 필요한 경우 에러 처리를 위해 다음 줄을 추가할 수 있습니다.
           // throw new Error("Invalid response structure");
       }
     }
@@ -165,9 +164,7 @@ router.post('/inputdata', async function (req, res) {
     try {
         const content = req.body.query
         console.log("컨텐츠 확인: " + content);
-        // const company_name = content.company_name
-        // const job_description = content.job_description
-        // const qualification_conditions = content.qualification_conditionst
+
         const result1 = await chat.sendMessageStream(content);
         let text = "";
         for await (const item of result1.stream) {
@@ -175,10 +172,9 @@ router.post('/inputdata', async function (req, res) {
                 text += item.candidates[0].content.parts[0].text;
             } else {
                 console.error("Unexpected item structure:", item);
-                // 필요한 경우 에러 처리를 위해 다음 줄을 추가할 수 있습니다.
-                // throw new Error("Invalid response structure");
             }
         }
+        console.log("컨텐츠 답변 확인: " + text);
         res.json({
             result: text
         });

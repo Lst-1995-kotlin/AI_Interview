@@ -18,6 +18,12 @@
                 indeterminate
                 ></v-progress-circular>
             </div>
+            <div class= "mt-6 text-center" 
+                style="font-size: 24px;"
+                v-if="endcheck"
+            >
+            면접점수: {{ score }}점
+            </div>
             <div class = "mt-6 text-center" 
                 ref = "pagebottom">
                 <v-btn
@@ -50,11 +56,27 @@
             >
             </v-text-field>
         </div>
-        <div>
-            <v-btn
-                v-if="!endcheck"
-            >중지하기</v-btn>
-        </div>
+
+        <v-dialog v-model="showDialog" max-width="600px">
+          <v-card>
+            <v-card-title>
+              <span class="headline">저장하기</span>
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="title"
+                label="제목을 입력하세요"
+                required
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="updateTitleWithSave">저장</v-btn>
+              <v-btn color="blue darken-1" text @click="notSaveHistory">저장하지 않고 나가기</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
     </div>    
     
 </template>
@@ -70,7 +92,9 @@ import moment from "moment"
                 query: "",
                 history:[],
                 title: "",
-                titleNo: ""
+                titleNo: "",
+                score: "",
+                showDialog: false
             }
         },
         async mounted() {
@@ -94,6 +118,15 @@ import moment from "moment"
             }
         },
         methods: {
+            async updateTitleWithSave() {
+                // 타이틀을 변경
+                this.showDialog = false;
+            },
+            async notSaveHistory() {
+                // 저장하지 않기 때문에 해당 기록 삭제
+                this.showDialog = false;
+            }
+            ,
             async saveTitle() {
                 try {
                     this.$axios.post("/history/writetitle", {title: "지정되지 않은 타이틀"})
@@ -119,9 +152,6 @@ import moment from "moment"
                     this.$refs.pagebottom.scrollIntoView({ behavior: 'smooth', block: 'end' });
                 });
             },
-            stop() {
-                this.endcheck = true;
-            },
             async inputData() {
                 this.focusLastCard();
                 if (this.query == "") return;
@@ -129,16 +159,19 @@ import moment from "moment"
                 if (this.endcheck) return;
                 this.loading_cicle_is_show = true;
                 console.log("보낸 내용" + this.query);
-                await this.history.push({
+                this.history.push({
                     role: "user",
                     text: this.query
                 });
                 this.focusLastCard();
                 await this.$axios.post("/gemini/inputdata", {query: this.query})
-                .then((response) => {
+                .then(async(response) => {
                     let result = response.data.result;
                     if (result.includes('endInterview')) {
+                        console.log(result)
+                        this.score = result.split('endInterview')[1];
                         result = result.split('endInterview')[0];
+                        console.log(result.split('endInterview')[1])
                         this.endcheck = true;
                     }
                     this.history.push({
