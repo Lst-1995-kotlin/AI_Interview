@@ -73,59 +73,47 @@ import moment from "moment"
                 titleNo: ""
             }
         },
-        mounted() {
+        async mounted() {
+            await this.saveTitle()
             this.$axios.post("/gemini/getInitData")
-            .then((response) =>{
+            .then(async (response) =>{
                 console.log(response.data.result)
-                this.history.push({
+                await this.history.push({
                     role: "model",
                     text: response.data.result
                 })
                 this.loading_cicle_is_show = false
             })
-            
+        },
+        watch: {
+            history: {
+                handler(newVal, oldVal) {
+                    this.saveContent();
+                },
+                deep: true
+            }
         },
         methods: {
             async saveTitle() {
                 try {
-                    this.$axios.post("/history/writetitle", {title: "임시타이틀123"})
+                    this.$axios.post("/history/writetitle", {title: "지정되지 않은 타이틀"})
                     .then((response) => {
                         this.titleNo = response.data.no;
-                        console.log("저장된 titleNo:" + this.titleNo);
-                        this.saveContent();
                     })
                 } catch (error) {
                     console.error("Error saving title:", error);
                 }
             },
             async saveContent() {
-                if (!Array.isArray(this.history)) {
-                    console.error("this.history는 배열이 아닙니다.");
-                    return;
-                }
-
-                console.log("저장된 titleNo:", this.titleNo);
-                
-                for await (let talk of this.history) {
-                    let savetalk = {
+                let lastItem = this.history[this.history.length-1]
+                let savetalk = {
                         titleNo: this.titleNo,
-                        writer: talk.role,
-                        content: talk.text
+                        writer: lastItem.role,
+                        content: lastItem.text
                     };
-                    try {
-                        console.log("저장 중:", savetalk);
-                        await this.$axios.post("/history/writecontent", savetalk);
-                        console.log("성공적으로 저장됨:", savetalk);
-
-                        // 100ms 지연
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    } catch (error) {
-                        console.error("내용 저장 중 오류 발생:", error);
-                    }
-                }
-                console.log("모든 항목이 저장되었습니다.");
-            }
-            ,
+                await this.$axios.post("/history/writecontent", savetalk);
+                console.log(savetalk + "항목이 저장되었습니다.");
+            },
             focusLastCard() {
                 this.$nextTick(() => {
                     this.$refs.pagebottom.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -134,19 +122,19 @@ import moment from "moment"
             stop() {
                 this.endcheck = true;
             },
-            inputData() {
+            async inputData() {
                 this.focusLastCard();
                 if (this.query == "") return;
                 if (this.loading_cicle_is_show) return;
                 if (this.endcheck) return;
                 this.loading_cicle_is_show = true;
                 console.log("보낸 내용" + this.query);
-                this.history.push({
+                await this.history.push({
                     role: "user",
                     text: this.query
                 });
                 this.focusLastCard();
-                this.$axios.post("/gemini/inputdata", {query: this.query})
+                await this.$axios.post("/gemini/inputdata", {query: this.query})
                 .then((response) => {
                     let result = response.data.result;
                     if (result.includes('endInterview')) {
@@ -161,11 +149,11 @@ import moment from "moment"
                     this.loading_cicle_is_show = false;
                     this.focusLastCard();
                 });
-            }
-            
+            },
         }
     }
 </script>
+
 
 <style>
 .btnstyle{

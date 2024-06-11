@@ -33,7 +33,7 @@ function model(Sequelize, connection) {
 
     Title.hasMany(Content, {
         as:"titles",
-        foreignKey:"no"
+        foreignKey:"titleNo"
     })
 
     connection.sync({
