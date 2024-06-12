@@ -47,7 +47,7 @@
             class="fixed-bottom-center"
             ref="text_input"
         >
-            <v-text-field
+            <v-textarea
                 class="inputcontent"
                 variant="solo-filled"
                 label="질문을 입력하세요"
@@ -57,7 +57,7 @@
                 v-if="!endcheck"
                 @click:append-inner="inputData"
             >
-            </v-text-field>
+            </v-textarea>
         </div>
 
         <v-dialog v-model="showDialog" max-width="600px">
