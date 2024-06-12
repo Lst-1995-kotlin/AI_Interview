@@ -1,5 +1,8 @@
 <template> 
     <div class="d-flex flex-column h-100 templetestyle">
+        <div class="page-title" @click="moveHome">
+            <h1> AI_INTERVIEW </h1>
+        </div>
         <div class="flex-grow-1 overflow-auto" ref="items">
             <v-card v-for="(item, index) in history" 
             :key="index" 
@@ -131,6 +134,9 @@ import moment from "moment"
         methods: {
             openSaveDialog() {
                 this.showDialog = true;
+            },
+            moveHome() {
+                this.$router.push("/" )
             },
             async updateTitleWithSave() {
                 // 타이틀을 변경

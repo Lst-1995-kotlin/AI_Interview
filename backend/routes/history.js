@@ -10,6 +10,43 @@ router.post("/writetitle", async function(req, res){
     })
 })
 
+router.get("/title/:no", async function(req, res){
+    let no = req.params.no
+    let result = await sequelize.models.title.findByPk(no)
+    res.json({
+        title: result.title,
+        score: result.score
+    })
+})
+
+router.get("/contents/:no", async function(req, res){
+    let no = req.params.no
+    let history = await sequelize.models.content.findAll({
+        where: {
+            titleNo: no
+        },
+        order:[["no", "ASC"]]
+    })
+    res.json(history)
+})
+
+router.post("/interviewTitles", async function(req, res){
+    let page = req.body.page || 1
+    let offset = (page - 1) * 10
+    let titles = await sequelize.models.title.findAll({
+        limit: 10,
+        offset: offset,
+        order:[["writeDate", "DESC"], ["no", "DESC"]]
+    })
+    let totalCount = await sequelize.models.title.count({
+    })
+    let totalPage = Math.ceil(totalCount/10)
+    res.json({
+        titles: titles,
+        totalPage: totalPage
+    })
+})
+
 router.post("/writecontent", async function(req, res){
     let content = req.body
     console.log("콘텐츠 작성 호출됨")
@@ -35,6 +72,7 @@ router.post("/updateTitle", async function(req, res){
 })
 
 router.post("/deleteHistory", async function(req, res){
+    console.log("삭제 실행됨")
     await sequelize.models.title.destroy({
         where: {
             no: req.body.no

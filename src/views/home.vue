@@ -1,5 +1,8 @@
 <template>
     <div class="d-flex flex-column h-100 background">
+        <div class="page-title" @click="moveHome">
+            <h1> AI_INTERVIEW </h1>
+        </div>
         <div class="top-margin"></div>
         <v-container fluid>
             <v-textarea class="input-style" auto-grow row-height="15" rows="1" variant="solo" v-model="information.company_name" label="기업명"></v-textarea>
@@ -8,7 +11,7 @@
             <v-textarea class="input-style" auto-grow row-height="15" rows="1" variant="solo" v-model="information.preferred_qualifications" label="우대사항"></v-textarea>
             <div class="text-center">
                 <v-btn @click = "request" color="primary" class="btn">면접 보러가기</v-btn>
-                <v-btn @click = "exit" color="primary" class="btn">나가기</v-btn>
+                <v-btn @click = "goHistory" color="primary" class="btn">기록 보러가기</v-btn>
             </div>
         </v-container>
         <div class="text-center">
@@ -37,8 +40,11 @@
             }
         },
         methods: {
-            exit() {
-                this.$router.push("/")
+            moveHome() {
+                this.$router.push("/" )
+            },
+            goHistory() {
+                this.$router.push("/list")
             },
             request() {
                 if (this.information.company_name == "" && 
