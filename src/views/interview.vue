@@ -30,7 +30,7 @@
                 color="primary"
                 class="btnstyle"
                 v-if="endcheck"
-                @click="saveTitle"
+                @click="openSaveDialog"
                 >저장하기</v-btn>
                 <v-btn
                 color="primary"
@@ -71,8 +71,8 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="updateTitleWithSave">저장</v-btn>
-              <v-btn color="blue darken-1" text @click="notSaveHistory">저장하지 않고 나가기</v-btn>
+              <v-btn color="blue darken-1" @click="updateTitleWithSave">저장</v-btn>
+              <v-btn color="blue darken-1" @click="notSaveHistory">저장하지 않고 나가기</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -102,7 +102,7 @@ import moment from "moment"
             this.$axios.post("/gemini/getInitData")
             .then(async (response) =>{
                 console.log(response.data.result)
-                await this.history.push({
+                this.history.push({
                     role: "model",
                     text: response.data.result
                 })
@@ -118,9 +118,22 @@ import moment from "moment"
             }
         },
         methods: {
+            openSaveDialog() {
+                this.showDialog = true;
+            },
             async updateTitleWithSave() {
                 // 타이틀을 변경
-                this.showDialog = false;
+                this.$axios.post("/history/updateTitle", {
+                    no: this.titleNo,
+                    title: this.title,
+                    score: this.score
+                }).then(response => {
+                    if (response.data.result == "success") {
+                        this.showDialog = false;
+                        this.$router.push("/")
+                    }
+                })
+                
             },
             async notSaveHistory() {
                 // 저장하지 않기 때문에 해당 기록 삭제

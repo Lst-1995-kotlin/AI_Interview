@@ -58,8 +58,8 @@
                         return
                     }
                     this.result = ""
+                    this.$router.push("/interview")
                 })
-                this.$router.push("/interview")
             }
         }
     }
