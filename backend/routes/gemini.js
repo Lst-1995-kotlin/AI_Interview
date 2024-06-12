@@ -3,7 +3,7 @@ const {
     HarmCategory,
     HarmBlockThreshold,
   } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI('AIzaSyARr2Wj_lZuw1LnxSRdgiF7Uakfzx0032M');
+const genAI = new GoogleGenerativeAI('AIzaSyBIpZ5MzBRZZmKRfIGiGGMB3vpZOHF8HdM');
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro",
   });
@@ -107,19 +107,14 @@ let localHistory = [
 ]
 
 router.post('/createInterviewer', async function (req, res) {
-    const content = req.body
-    console.log("컨텐츠 확인: " + content);
-    company_name = content.company_name
-    job_description = content.job_description
-    qualification_conditions = content.qualification_conditions
-    preferred_qualifications = content.preferred_qualifications
     
     try{
-      chat = await model.startChat({
-        generationConfig,
-        safetySettings,
-        history: localHistory,
-      });
+      const content = req.body
+      console.log("컨텐츠 확인: " + content);
+      company_name = content.company_name
+      job_description = content.job_description
+      qualification_conditions = content.qualification_conditions
+      preferred_qualifications = content.preferred_qualifications
       res.json({
         "result": "success"
       })
@@ -134,6 +129,11 @@ router.post('/createInterviewer', async function (req, res) {
 router.post('/getInitData',async function (req, res) {
   
   try {
+    chat = await model.startChat({
+      generationConfig,
+      safetySettings,
+      history: localHistory,
+    });
     const responseStream = await chat.sendMessageStream("기업 이름은" + company_name + "이고 직무내용은" + job_description + "이야 자격요건은" + qualification_conditions + 
       "우대사항은" + preferred_qualifications + "이야 해당 채용공고를 보고 지원한 사람을 면접 보게 되었고 이제부터 면접관 모드로 면접을 진행해줘"
     );
