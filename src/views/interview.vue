@@ -36,7 +36,7 @@
                 color="primary"
                 class="btnstyle"
                 v-if="endcheck"
-                @click="$router.push('/')"
+                @click="notSaveHistory"
                 >나가기</v-btn>
             </div>
         </div>
@@ -69,6 +69,16 @@
                 required
               ></v-text-field>
             </v-card-text>
+            <div class="text-center lodingstyle" 
+                ref="loading_cicle">
+                <v-progress-circular
+                class="mt-4"
+                v-if="save_cicle_is_show"
+                :size="50"
+                color="primary"
+                indeterminate
+                ></v-progress-circular>
+            </div>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" @click="updateTitleWithSave">저장</v-btn>
@@ -94,7 +104,8 @@ import moment from "moment"
                 title: "",
                 titleNo: "",
                 score: "",
-                showDialog: false
+                showDialog: false,
+                save_cicle_is_show: false
             }
         },
         async mounted() {
@@ -123,6 +134,7 @@ import moment from "moment"
             },
             async updateTitleWithSave() {
                 // 타이틀을 변경
+                this.save_cicle_is_show = true
                 this.$axios.post("/history/updateTitle", {
                     no: this.titleNo,
                     title: this.title,
@@ -130,6 +142,7 @@ import moment from "moment"
                 }).then(response => {
                     if (response.data.result == "success") {
                         this.showDialog = false;
+                        this.save_cicle_is_show = false;
                         this.$router.push("/")
                     }
                 })
@@ -137,7 +150,15 @@ import moment from "moment"
             },
             async notSaveHistory() {
                 // 저장하지 않기 때문에 해당 기록 삭제
-                this.showDialog = false;
+                this.save_cicle_is_show = true
+                this.$axios.post("/history/deleteHistory", {no: this.titleNo})
+                .then(response => {
+                    if (response.data.result == "success") {
+                        this.showDialog = false;
+                        this.save_cicle_is_show = false;
+                        this.$router.push("/")
+                    }
+                })
             }
             ,
             async saveTitle() {

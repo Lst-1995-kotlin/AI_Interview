@@ -33,4 +33,20 @@ router.post("/updateTitle", async function(req, res){
         result: "success"
     })
 })
+
+router.post("/deleteHistory", async function(req, res){
+    await sequelize.models.title.destroy({
+        where: {
+            no: req.body.no
+        }
+    })
+    await sequelize.models.content.destroy({
+        where: {
+            titleNo: req.body.no
+        }
+    })
+    res.json({
+        result: "success"
+    })
+})
 module.exports = router;
