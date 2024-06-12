@@ -47,9 +47,9 @@
                 this.$router.push("/list")
             },
             request() {
-                if (this.information.company_name == "" && 
-                    this.information.job_description == "" &&
-                    this.information.qualification_conditions == "" &&
+                if (this.information.company_name == "" || 
+                    this.information.job_description == "" ||
+                    this.information.qualification_conditions == "" ||
                     this.information.preferred_qualifications == ""
                 ) {
                     alert("모든 내용을 기입해주세요.")

@@ -138,7 +138,7 @@ import moment from "moment"
             moveHome() {
                 this.$router.push("/" )
             },
-            async updateTitleWithSave() {
+            updateTitleWithSave() {
                 // 타이틀을 변경
                 this.save_cicle_is_show = true
                 this.$axios.post("/history/updateTitle", {

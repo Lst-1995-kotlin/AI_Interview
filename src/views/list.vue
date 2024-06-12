@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       interviewTitles: [],
-      page: 1,
+      page: 0,
       totalPage: 0
     };
   },
